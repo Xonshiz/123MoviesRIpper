@@ -22,11 +22,14 @@ class Movies:
         video_file_name = None
         base_page_content = None
         youtube_dl_command = None
-        url = 'https://new-movies123.co/tv-series/deutschland-89-season-1/UyTSbjuh/o8r2h6r6/s4dasrz5-watch-online-for-free.html'
+        url = 'https://new-movies123.co/tv-series/deutschland-89-season-1/UyTSbjuh/917zdf25/abfjn1jk-watch-online-for-free.html'
         resolution = '1080'
         while not url:
             url = input("Enter Movie URL : ").strip()
+        if url:
+            self.get_episode_list(url=url)
 
+    def single_episode(self, url, file_name):
         xml_request_data = get_xml_http_request(url)
         if xml_request_data and xml_request_data == "none":
             print("IP Limit Reached")
@@ -46,7 +49,8 @@ class Movies:
                     print("Will Be Downloading {0} Stream.".format(max_resolution))
                     video_url = str(video_url).replace('/360?', '/{0}?'.format(max_resolution))
                 else:
-                    print("Couldn't Find Max Resolution. Going with default {0}.".format(xml_request_data.get('label', '')))
+                    print("Couldn't Find Max Resolution. Going with default {0}.".format(
+                        xml_request_data.get('label', '')))
 
                 base_page_content = get_http_request(url, text_only=True)
                 if not base_page_content:
@@ -61,21 +65,16 @@ class Movies:
                     if not video_metadata:
                         print("Can't find metadata")
                     if len(video_metadata) > 1:
-                        metadata_json = str(video_metadata[0]).replace('<script type="application/ld+json">', '').replace('</script>', '')
+                        metadata_json = str(video_metadata[0]).replace('<script type="application/ld+json">',
+                                                                       '').replace('</script>', '')
                         season_metadata = dict(json.loads(str(metadata_json)))
-                        current__episode_metadata_json = str(video_metadata[1]).replace('<script type="application/ld+json">', '').replace('</script>', '')
+                        current__episode_metadata_json = str(video_metadata[1]).replace(
+                            '<script type="application/ld+json">', '').replace('</script>', '')
                         current_video_metadata = dict(json.loads(current__episode_metadata_json))
-                        episodes = season_metadata.get('episode', [])
-                        for episode in episodes:
-                            url = dict(episode).get('url', None)
-                            if url:
-                                related_episodes.append(str(url))
                         current_episode_list = current_video_metadata.get('itemListElement')
                         if current_episode_list and len(current_episode_list) > 0:
                             episode_dict = dict(current_episode_list[-1])
                             episode_item = episode_dict.get('item')
-                            # current_episode = json.loads(str(episode_item))
-                            # current_episode_name = utils.get_clean_path_name(current_episode['name'])
                             current_episode_name = utils.get_clean_path_name(dict(episode_item).get('name'))
                             file_name = '{0}.srt'.format(current_episode_name)
                             video_file_name = '{0}.mp4'.format(current_episode_name)
@@ -87,13 +86,39 @@ class Movies:
                                     subtitle_src = str(subtitle_info).replace('\\', '')
                                     subtitle_content = browser_instance.get_request(subtitle_src, text_only=True)
                                     series_name = url.split('/')[4]
-                                    path_created = path_util.create_paths('dist' + os.sep + series_name)
-                                    if path_created:
-                                        file_written = utils.create_file_binary_mode(path_created, os.sep + file_name, subtitle_content)
-                                        if file_written:
-                                            print("Downloaded : {0}".format(file_name))
-                                        yt_command = utils.get_youtube_dl_command(file_location=path_created + os.sep + video_file_name, video_url=video_url)
-                                        print("Youtube-dl Command: {0}".format(yt_command))
-                                        process_code = utils.call_youtube_dl(yt_command)
-                                        print("Process Done: {0}".format(process_code))
+                                    if not path_util.file_exists('dist', os.sep + series_name):
+                                        path_created = path_util.create_paths('dist' + os.sep + series_name + os.sep + video_file_name)
+                                        if path_created:
+                                            file_written = utils.create_file_binary_mode(path_created, os.sep + file_name, subtitle_content)
+                                            if file_written:
+                                                print("Downloaded : {0}".format(file_name))
+                                            yt_command = utils.get_youtube_dl_command(file_location=path_created + os.sep + video_file_name, video_url=video_url)
+                                            print("Youtube-dl Command: {0}".format(yt_command))
+                                            process_code = utils.call_youtube_dl(yt_command)
+                                            print("Process Done: {0}".format(process_code))
+        return 0
+
+    def get_episode_list(self, url):
+        related_episodes = []
+        base_page_content = get_http_request(url, text_only=True)
+        soup = BeautifulSoup(base_page_content, 'html.parser')
+
+        video_metadata = soup.find_all('script', type='application/ld+json')
+        if not video_metadata:
+            print("Can't find metadata")
+        if len(video_metadata) > 1:
+            metadata_json = str(video_metadata[0]).replace('<script type="application/ld+json">',
+                                                           '').replace('</script>', '')
+            season_metadata = dict(json.loads(str(metadata_json)))
+            # current__episode_metadata_json = str(video_metadata[1]).replace('<script type="application/ld+json">', '').replace('</script>', '')
+            # current_video_metadata = dict(json.loads(current__episode_metadata_json))
+            episodes = season_metadata.get('episode', [])
+            for episode in episodes:
+                url = dict(episode).get('url', None)
+                if url:
+                    related_episodes.append(str(url))
+            print("Total Episodes To Download: {0}".format(len(related_episodes)))
+            for episode_url in related_episodes:
+                self.single_episode(url=episode_url, file_name=None)
+        return 0
 
