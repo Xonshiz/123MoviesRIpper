@@ -1,0 +1,5 @@
+# Default ignored files
+/workspace.xml
+src/.idea/*
+src/dist/*
+*.pyc
