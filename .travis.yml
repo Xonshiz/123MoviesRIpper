@@ -5,8 +5,7 @@ matrix:
         - 2.6
       dist: trusty
       install:
-        - "pip install bs4"
-        - "pip install pathlib"
+        - "pip install -r requirements.txt"
       script:
         - cd src
         - python __main__.py
@@ -19,8 +18,7 @@ matrix:
         - 3.5
       dist: trusty
       install:
-        - "pip install bs4"
-        - "pip install pathlib"
+        - "pip install -r requirements.txt"
       script:
         - cd src
         - python  __main__.py
@@ -37,8 +35,7 @@ matrix:
         - "pip install --upgrade pip"
       install:
         - "python --version"
-        - "pip install bs4"
-        - "pip install pathlib"
+        - "pip install -r requirements.txt"
         - "pip install pyinstaller"
       script:
         - cd src
@@ -75,8 +72,7 @@ matrix:
         - python -m pip install --upgrade pip
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
       install:
-        - "pip install bs4"
-        - "pip install pathlib"
+        - "pip install -r requirements.txt"
         - "pip install pyinstaller"
       script:
         - cd src
@@ -110,8 +106,7 @@ matrix:
         - python3 --version
         - python3 -m pip install --upgrade pip
       install:
-        - "pip install bs4"
-        - "pip install pathlib"
+        - "pip install -r requirements.txt"
         - "pip install pyinstaller"
       script:
         - cd src
