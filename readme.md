@@ -1,4 +1,4 @@
-# [new-movies123.co Downloader](https://new-movies123.co/)
+# [new-movies123.co Downloader](https://new-movies123.co/) | [![Build Status](https://travis-ci.com/Xonshiz/123MoviesRIpper.svg?branch=master)](https://travis-ci.com/github/Xonshiz/123MoviesRIpper) [![GitHub release](https://img.shields.io/github/v/release/xonshiz/123MoviesRIpper.svg?style=flat-square)](https://github.com/Xonshiz/123MoviesRIpper/releases/) [![Github All Releases](https://img.shields.io/github/downloads/xonshiz/123MoviesRIpper/total.svg?style=flat-square)](https://github.com/xonshiz/123MoviesRIpper/releases)
 Script to bypass resolution and IP Limit on new-movies123.co
 
 This script will download both, an mp4 1080p (or the next highest available stream) and subtitles (.srt).
@@ -21,7 +21,7 @@ Just download the proper binary and execute it. It'll ask for the URL, paste the
 - When you're into src directory, run this command: `python __main__.py`
 
 
-P.S: This is a script I hacked around last night, because amazon prime decided not to make season 3 of "D" available in most regions and this website was the only way to grab the episodes.
+P.S: This is a script I hacked around last night, because amazon prime decided not to make season 3 of "Deutschland 83" available in most regions and this website was the only way to grab the episodes.
 
 Welp, use with caution. And as usual, no harm intended via this script.
 
