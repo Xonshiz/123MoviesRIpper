@@ -15,7 +15,11 @@ from bs4 import BeautifulSoup
 
 class Movies:
     def __init__(self, argv, cwd):
-        print("Main")
+        if len(argv) > 0:
+            print("Arguments: {0}".format(argv))
+            if argv[0] == '--build':
+                print("Got the build working check. Exiting.")
+                sys.exit(0)
         self.queue = []
         related_episodes = []
         url = None

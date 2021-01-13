@@ -2,13 +2,13 @@ matrix:
   include:
     - language: python
       python:
-        - 2.6
+        - 2.7
       dist: trusty
       install:
         - "pip install -r requirements.txt"
       script:
         - cd src
-        - python __main__.py
+        - python __main__.py --build
         - cd ..
       notifications:
         email:
@@ -21,7 +21,7 @@ matrix:
         - "pip install -r requirements.txt"
       script:
         - cd src
-        - python  __main__.py
+        - python  __main__.py --build
         - cd ..
       notifications:
         email:
@@ -39,7 +39,7 @@ matrix:
         - "pip install pyinstaller"
       script:
         - cd src
-        - python  __main__.py
+        - python  __main__.py --build
         - pyinstaller --onefile --hidden-import=queue "__main__.py" -n "new_movies_123_dl_linux"
         - cd ..
       notifications:
@@ -76,7 +76,7 @@ matrix:
         - "pip install pyinstaller"
       script:
         - cd src
-        - python  __main__.py
+        - python  __main__.py --build
         - pyinstaller --onefile --hidden-import=queue "__main__.py" -n "new_movies_123_dl.exe"
         - cd ..
       notifications:
@@ -110,7 +110,7 @@ matrix:
         - "pip install pyinstaller"
       script:
         - cd src
-        - python3 __main__.py
+        - python3 __main__.py --build
         - pyinstaller --onefile --hidden-import=queue "__main__.py"  -n "new_movies_123_dl_osx"
         - export newMoviesVersion=`cat version.txt`
         - cd ..
