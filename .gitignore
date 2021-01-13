@@ -3,3 +3,4 @@
 src/.idea/*
 src/dist/*
 *.pyc
+.idea/*
