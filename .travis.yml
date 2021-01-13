@@ -1,0 +1,135 @@
+matrix:
+  include:
+    - language: python
+      python:
+        - 2.6
+      dist: trusty
+      install:
+        - "pip install bs4"
+      script:
+        - cd src
+        - python __main__.py
+        - cd ..
+      notifications:
+        email:
+          - xonshiz@gmail.com
+    - language: python
+      python:
+        - 3.5
+      dist: trusty
+      install:
+        - "pip install bs4"
+      script:
+        - cd src
+        - python  __main__.py
+        - cd ..
+      notifications:
+        email:
+          - xonshiz@gmail.com
+    - os: linux
+      language: python
+      python:
+        - 3.8
+      dist: xenial
+      before_install:
+        - "pip install --upgrade pip"
+      install:
+        - "python --version"
+        - "pip install bs4"
+        - "pip install pyinstaller"
+      script:
+        - cd src
+        - python  __main__.py
+        - pyinstaller --onefile --hidden-import=queue "__main__.py" -n "new_movies_123_dl_linux"
+        - cd ..
+      notifications:
+        email:
+          - xonshiz@gmail.com
+      before_deploy:
+        - export TRAVIS_TAG="1.0.$TRAVIS_BUILD_NUMBER"
+        - echo "$TRAVIS_TAG" "$TRAVIS_COMMIT"
+        - git config --local user.name "$USER_NAME"
+        - git config --local user.email "$USER_EMAIL"
+        - git tag "$TRAVIS_TAG" "$TRAVIS_COMMIT"
+      deploy:
+        - provider: releases
+          tag_name: $TRAVIS_TAG
+          overwrite: true
+          api_key: $GITHUB_TOKEN
+          name: "new_movies_123_dl"
+          file: "new_movies_123_dl/dist/new_movies_123_dl_linux"
+          skip_cleanup: true
+          draft: false
+          on:
+            branch: master
+    - os: windows
+      language: sh
+      python: "3.8"
+      before_install:
+        - choco install python --version 3.8.0
+        - python --version
+        - export PATH="/c/Python38:/c/Python38/Scripts:$PATH"
+        - python -m pip install --upgrade pip
+      env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
+      install:
+        - "pip install bs4"
+        - "pip install pyinstaller"
+      script:
+        - cd src
+        - python  __main__.py
+        - pyinstaller --onefile --hidden-import=queue "__main__.py" -n "new_movies_123_dl.exe"
+        - cd ..
+      notifications:
+        email:
+          - xonshiz@gmail.com
+      before_deploy:
+        - export TRAVIS_TAG="1.0.$TRAVIS_BUILD_NUMBER"
+        - echo "$TRAVIS_TAG" "$TRAVIS_COMMIT"
+        - git config --local user.name "$USER_NAME"
+        - git config --local user.email "$USER_EMAIL"
+        - git tag "$TRAVIS_TAG" "$TRAVIS_COMMIT"
+      deploy:
+        - provider: releases
+          tag_name: $TRAVIS_TAG
+          overwrite: true
+          api_key: $GITHUB_TOKEN
+          name: "new_movies_123_dl"
+          file: "new_movies_123_dl/dist/new_movies_123_dl.exe"
+          skip_cleanup: true
+          draft: false
+          on:
+            branch: master
+    - os: osx
+      language: sh
+      python: "3.8"
+      before_install:
+        - python3 --version
+        - python3 -m pip install --upgrade pip
+      install:
+        - "pip install bs4"
+        - "pip install pyinstaller"
+      script:
+        - cd src
+        - python3 __main__.py
+        - pyinstaller --onefile --hidden-import=queue "__main__.py"  -n "new_movies_123_dl_osx"
+        - export newMoviesVersion=`cat version.txt`
+        - cd ..
+      notifications:
+        email:
+          - xonshiz@gmail.com
+      before_deploy:
+        - export TRAVIS_TAG="1.0.$TRAVIS_BUILD_NUMBER"
+        - echo "$TRAVIS_TAG" "$TRAVIS_COMMIT"
+        - git config --local user.name "$USER_NAME"
+        - git config --local user.email "$USER_EMAIL"
+      deploy:
+        - provider: releases
+          tag_name: $TRAVIS_TAG
+          overwrite: true
+          api_key: $GITHUB_TOKEN
+          name: "new_movies_123_dl"
+          file: "new_movies_123_dl/dist/new_movies_123_dl_osx"
+          skip_cleanup: true
+          draft: false
+          on:
+            branch: master
