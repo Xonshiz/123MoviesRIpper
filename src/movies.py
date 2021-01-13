@@ -16,6 +16,7 @@ from bs4 import BeautifulSoup
 class Movies:
     def __init__(self, argv, cwd):
         print("Main")
+        self.queue = []
         related_episodes = []
         url = None
         file_name = None
@@ -29,7 +30,7 @@ class Movies:
         if url:
             self.get_episode_list(url=url)
 
-    def single_episode(self, url, file_name):
+    def single_episode(self, url, file_name, add_to_queue=False):
         xml_request_data = get_xml_http_request(url)
         if xml_request_data and xml_request_data == "none":
             print("IP Limit Reached")
@@ -93,9 +94,13 @@ class Movies:
                                             if file_written:
                                                 print("Downloaded : {0}".format(file_name))
                                             yt_command = utils.get_youtube_dl_command(file_location=path_created + os.sep + video_file_name, video_url=video_url)
-                                            print("Youtube-dl Command: {0}".format(yt_command))
-                                            process_code = utils.call_youtube_dl(yt_command)
-                                            print("Process Done: {0}".format(process_code))
+                                            if add_to_queue:
+                                                print("Added To Queue")
+                                                self.queue.append(yt_command)
+                                            else:
+                                                print("Youtube-dl Command: {0}".format(yt_command))
+                                                process_code = utils.call_youtube_dl(yt_command)
+                                                print("Process Done: {0}".format(process_code))
         return 0
 
     def get_episode_list(self, url):
@@ -119,6 +124,10 @@ class Movies:
                     related_episodes.append(str(url))
             print("Total Episodes To Download: {0}".format(len(related_episodes)))
             for episode_url in related_episodes:
-                self.single_episode(url=episode_url, file_name=None)
+                self.single_episode(url=episode_url, file_name=None, add_to_queue=True)
+            for current_command in self.queue:
+                print(current_command)
+                process_code = utils.call_youtube_dl(current_command)
+                print("Process Done: {0}".format(process_code))
         return 0
 
