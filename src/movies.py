@@ -23,7 +23,7 @@ class Movies:
         video_file_name = None
         base_page_content = None
         youtube_dl_command = None
-        url = 'https://new-movies123.co/tv-series/deutschland-89-season-1/UyTSbjuh/917zdf25/abfjn1jk-watch-online-for-free.html'
+        # url = 'https://new-movies123.co/tv-series/deutschland-89-season-1/UyTSbjuh/917zdf25/abfjn1jk-watch-online-for-free.html'
         resolution = '1080'
         while not url:
             url = input("Enter Movie URL : ").strip()
@@ -88,7 +88,7 @@ class Movies:
                                     subtitle_content = browser_instance.get_request(subtitle_src, text_only=True)
                                     series_name = url.split('/')[4]
                                     if not path_util.file_exists('dist', os.sep + series_name):
-                                        path_created = path_util.create_paths('dist' + os.sep + series_name + os.sep + video_file_name)
+                                        path_created = path_util.create_paths('dist' + os.sep + series_name + os.sep + current_episode_name)
                                         if path_created:
                                             file_written = utils.create_file_binary_mode(path_created, os.sep + file_name, subtitle_content)
                                             if file_written:
